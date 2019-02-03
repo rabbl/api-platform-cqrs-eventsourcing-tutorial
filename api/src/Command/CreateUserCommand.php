@@ -1,5 +1,4 @@
 <?php
-// src/Command/CreateUserCommand.php
 
 declare(strict_types=1);
 
@@ -7,23 +6,28 @@ namespace App\Command;
 
 use App\Entity\User;
 
-use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\UserRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 final class CreateUserCommand extends Command
 {
 
     protected static $defaultName = 'app:create-user';
 
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    /** @var UserRepository */
+    private $userRepository;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    /** @var UserPasswordEncoderInterface  */
+    private $passwordEncoder;
+
+    public function __construct(UserRepository $userRepository,  UserPasswordEncoderInterface $passwordEncoder)
     {
-        $this->entityManager = $entityManager;
+        $this->passwordEncoder = $passwordEncoder;
+        $this->userRepository = $userRepository;
         parent::__construct();
     }
 
@@ -56,17 +60,20 @@ final class CreateUserCommand extends Command
             return;
         }
 
-        $userRepository = $this->entityManager->getRepository(User::class);
-        $user = $userRepository->findOneBy(['username' => $username]);
-
+        $user = $this->userRepository->findOneBy(['username' => $username]);
         if ($user instanceof User) {
             $output->writeln('Username already taken!');
             return;
         }
 
+        /** @var User $user */
         $user = new User($username, $password, [$role]);
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
+        $encryptedPassword = $this->passwordEncoder->encodePassword($user, $password);
+        $user->setPassword($encryptedPassword);
+
+        $entityManager = $this->userRepository->getEm();
+        $entityManager->persist($user);
+        $entityManager->flush();
 
         $output->writeln('User successfully generated!');
     }

@@ -1,5 +1,4 @@
 <?php
-// src/Entity/User.php
 
 declare(strict_types=1);
 
@@ -14,7 +13,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ApiResource(
  *     attributes={"access_control"="is_granted('ROLE_ADMIN')"},
  * )
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\Table(name="users")
  * @ApiResource
  */
