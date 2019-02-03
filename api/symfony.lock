@@ -227,6 +227,15 @@
     "symfony/options-resolver": {
         "version": "v4.0.3"
     },
+    "symfony/phpunit-bridge": {
+        "version": "4.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.1",
+            "ref": "0e548dd90adba18fabd4ef419b14d361fe4d6c74"
+        }
+    },
     "symfony/polyfill-ctype": {
         "version": "v1.8.0"
     },
