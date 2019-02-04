@@ -7,6 +7,8 @@
         "ext-iconv": "*",
         "api-platform/api-pack": "^1.1",
         "guzzlehttp/guzzle": "^6.3",
+        "lexik/jwt-authentication-bundle": "^2.6",
+        "ramsey/uuid-doctrine": "^1.5",
         "symfony/console": "4.2.*",
         "symfony/dotenv": "4.2.*",
         "symfony/flex": "^1.1",
@@ -15,7 +17,10 @@
     },
     "require-dev": {
         "api-platform/schema-generator": "^2.1",
-        "symfony/profiler-pack": "^1.0"
+        "symfony/browser-kit": "4.2.*",
+        "symfony/phpunit-bridge": "4.2.*",
+        "symfony/profiler-pack": "^1.0",
+        "ext-json": "*"
     },
     "config": {
         "preferred-install": {
