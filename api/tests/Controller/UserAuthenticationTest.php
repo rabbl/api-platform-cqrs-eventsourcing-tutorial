@@ -6,35 +6,22 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class UserAuthenticationTest extends WebTestCase
 {
-    public function testAuthenticateAdmin()
+
+    public function provider()
     {
-        $client = static::createClient();
-
-        $client->request(
-            'POST',
-            '/api/login_check',
-            [],
-            [],
-            ['CONTENT_TYPE' => 'application/json'],
-            json_encode(["username" => "admin", "password" => "admin_pw"])
-        );
-
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $content = json_decode($client->getResponse()->getContent(), true);
-        $token = $content['token'];
-
-        $client->request(
-            'GET',
-            '/api/users',
-            [],
-            [],
-            ['HTTP_Authorization' => sprintf('Bearer %s',  $token)]
-        );
-
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        return [
+            ['admin', 'admin_pw', 200],
+            ['user', 'user_pw', 403]
+        ];
     }
 
-    public function testAuthenticateUser()
+    /**
+     * @dataProvider provider
+     * @param $username
+     * @param $password
+     * @param $statusCode
+     */
+    public function testAuthentication($username, $password, $statusCode)
     {
         $client = static::createClient();
 
@@ -44,7 +31,7 @@ class UserAuthenticationTest extends WebTestCase
             [],
             [],
             ['CONTENT_TYPE' => 'application/json'],
-            json_encode(["username" => "user", "password" => "user_pw"])
+            json_encode(["username" => $username, "password" => $password])
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -59,6 +46,6 @@ class UserAuthenticationTest extends WebTestCase
             ['HTTP_Authorization' => sprintf('Bearer %s',  $token)]
         );
 
-        $this->assertEquals(403, $client->getResponse()->getStatusCode());
+        $this->assertEquals($statusCode, $client->getResponse()->getStatusCode());
     }
 }
