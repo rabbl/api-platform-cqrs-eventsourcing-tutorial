@@ -15,7 +15,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * )
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\Table(name="users")
- * @ApiResource
  */
 final class User implements UserInterface
 {
