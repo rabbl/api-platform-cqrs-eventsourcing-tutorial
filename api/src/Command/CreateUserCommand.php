@@ -21,10 +21,10 @@ final class CreateUserCommand extends Command
     /** @var UserRepository */
     private $userRepository;
 
-    /** @var UserPasswordEncoderInterface  */
+    /** @var UserPasswordEncoderInterface */
     private $passwordEncoder;
 
-    public function __construct(UserRepository $userRepository,  UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(UserRepository $userRepository, UserPasswordEncoderInterface $passwordEncoder)
     {
         $this->passwordEncoder = $passwordEncoder;
         $this->userRepository = $userRepository;
@@ -38,8 +38,7 @@ final class CreateUserCommand extends Command
             ->addArgument('username', InputArgument::REQUIRED, 'Username')
             ->addArgument('password', InputArgument::REQUIRED, 'User password')
             ->addArgument('role', InputArgument::OPTIONAL, 'Users role')
-            ->setHelp('This command allows you to create a user...')
-        ;
+            ->setHelp('This command allows you to create a user...');
     }
 
     /**
@@ -55,19 +54,20 @@ final class CreateUserCommand extends Command
         $password = $input->getArgument('password');
         $role = $input->getArgument('role') ?? 'ROLE_USER';
 
-        if (strlen($username) < 5) {
-            $output->writeln('Username too short, length must be >= 5 !');
-            return;
-        }
-
         $user = $this->userRepository->findOneBy(['username' => $username]);
         if ($user instanceof User) {
             $output->writeln('Username already taken!');
             return;
         }
 
-        /** @var User $user */
-        $user = new User($username, $password, [$role]);
+        try {
+            /** @var User $user */
+            $user = new User($username, $password, [$role]);
+        } catch (\InvalidArgumentException $e) {
+            $output->writeln($e->getMessage());
+            return;
+        }
+
         $encryptedPassword = $this->passwordEncoder->encodePassword($user, $password);
         $user->setPassword($encryptedPassword);
 
