@@ -2,21 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Model;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ApiResource(
- *     attributes={"access_control"="is_granted('ROLE_ADMIN')"},
- * )
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\Table(name="users")
  */
-final class User implements UserInterface
+class User implements UserInterface
 {
     /**
      * @var Uuid
