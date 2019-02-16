@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Entity\User;
+use App\Model\User;
 
-use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,16 +18,16 @@ final class CreateUserCommand extends Command
 
     protected static $defaultName = 'app:create-user';
 
-    /** @var UserRepository */
-    private $userRepository;
+    /** @var EntityManagerInterface */
+    private $entityManager;
 
     /** @var UserPasswordEncoderInterface */
     private $passwordEncoder;
 
-    public function __construct(UserRepository $userRepository, UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
     {
         $this->passwordEncoder = $passwordEncoder;
-        $this->userRepository = $userRepository;
+        $this->entityManager = $entityManager;
         parent::__construct();
     }
 
@@ -54,7 +54,7 @@ final class CreateUserCommand extends Command
         $password = $input->getArgument('password');
         $role = $input->getArgument('role') ?? 'ROLE_USER';
 
-        $user = $this->userRepository->findOneBy(['username' => $username]);
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $username]);
         if ($user instanceof User) {
             $output->writeln('Username already taken!');
             return;
@@ -71,9 +71,8 @@ final class CreateUserCommand extends Command
         $encryptedPassword = $this->passwordEncoder->encodePassword($user, $password);
         $user->setPassword($encryptedPassword);
 
-        $entityManager = $this->userRepository->getEm();
-        $entityManager->persist($user);
-        $entityManager->flush();
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
 
         $output->writeln('User successfully generated!');
     }
