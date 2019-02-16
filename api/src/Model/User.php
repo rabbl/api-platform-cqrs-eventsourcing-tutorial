@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace App\Model;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
+ * @ApiResource(
+ *     attributes={"access_control"="is_granted('ROLE_ADMIN')"},
+ * )
  * @ORM\Entity()
  * @ORM\Table(name="users")
  */

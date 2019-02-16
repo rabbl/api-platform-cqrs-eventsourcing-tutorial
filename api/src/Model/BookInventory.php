@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Model;
 
 use Doctrine\ORM\Mapping as ORM;
-use Ramsey\Uuid\Uuid;
 
 /**
  * @ORM\Entity()
@@ -62,78 +61,47 @@ class BookInventory
         $this->name = $name;
         $this->description = $description;
         $this->totalNumberInInventory = $numberOfPurchasedBooks;
+        $this->totalNumberRented = 0;
     }
 
-    /**
-     * @return Uuid
-     */
     public function getIsbn(): string
     {
         return $this->isbn;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
     public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * @return string
-     */
     public function getDescription(): string
     {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     */
     public function setDescription(string $description): void
     {
         $this->description = $description;
     }
 
-    /**
-     * @return int
-     */
     public function getTotalNumberInInventory(): int
     {
         return $this->totalNumberInInventory;
     }
 
-    /**
-     * @param int $totalNumberInInventory
-     */
-    public function setTotalNumberInInventory(int $totalNumberInInventory): void
+    public function getTotalNumberInLibrary(): int
     {
-        $this->totalNumberInInventory = $totalNumberInInventory;
+        return $this->totalNumberInInventory - $this->totalNumberRented;
     }
 
-    /**
-     * @return int
-     */
     public function getTotalNumberRented(): int
     {
         return $this->totalNumberRented;
-    }
-
-    /**
-     * @param int $totalNumberRented
-     */
-    public function setTotalNumberRented(int $totalNumberRented): void
-    {
-        $this->totalNumberRented = $totalNumberRented;
     }
 
     public function addBooksToInventory(int $numberOfBooks): void

@@ -14,7 +14,7 @@ use Ramsey\Uuid\Uuid;
 class BookRental
 {
     /**
-     * @var Uuid
+     * @var string
      *
      * @ORM\Id
      * @ORM\Column(name="user_id", type="string", unique=true, nullable=false)
@@ -38,7 +38,7 @@ class BookRental
     /**
      * @var \DateTimeImmutable
      *
-     * @ORM\Column(name="returned", type="datetime_immutable")
+     * @ORM\Column(name="returned", type="datetime_immutable", nullable=true)
      */
     private $returned;
 
@@ -46,17 +46,19 @@ class BookRental
      * User constructor.
      * @param string $userId
      * @param string $isbn
+     * @throws \Exception
      */
     public function __construct(string $userId, string $isbn)
     {
         $this->userId = $userId;
         $this->isbn = $isbn;
+        $this->issued = new \DateTimeImmutable('now');
     }
 
     /**
      * @return Uuid
      */
-    public function getUserId(): Uuid
+    public function getUserId(): string
     {
         return $this->userId;
     }
@@ -88,7 +90,7 @@ class BookRental
     /**
      * @throws \Exception
      */
-    public function bookHasBeenReturned(): void
+    public function returnBook(): void
     {
         $this->returned = new \DateTimeImmutable('now');
     }
