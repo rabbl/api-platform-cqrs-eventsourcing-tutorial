@@ -7,7 +7,6 @@
         "ext-iconv": "*",
         "ext-json": "*",
         "api-platform/api-pack": "^1.1",
-        "beberlei/assert": "^3.2",
         "guzzlehttp/guzzle": "^6.3",
         "lexik/jwt-authentication-bundle": "^2.6",
         "ramsey/uuid-doctrine": "^1.5",
@@ -15,7 +14,6 @@
         "symfony/dotenv": "4.2.*",
         "symfony/flex": "^1.1",
         "symfony/framework-bundle": "4.2.*",
-        "symfony/messenger": "4.2.*",
         "symfony/yaml": "4.2.*"
     },
     "require-dev": {
