@@ -9,6 +9,7 @@ use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
+ * @ORM\Entity()
  * @ORM\Table(name="users")
  */
 class User implements UserInterface
@@ -27,6 +28,13 @@ class User implements UserInterface
      * @ORM\Column(name="username", type="string", length=255, unique=true, nullable=false)
      */
     private $username;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="profile", type="json_array")
+     */
+    private $profile;
 
     /**
      * @var string
@@ -69,6 +77,10 @@ class User implements UserInterface
         $this->password = $password;
         $this->enabled = $enabled;
         $this->roles = $roles;
+        $this->profile = [
+            'firstname' => '',
+            'lastname' => ''
+        ];
     }
 
     public function getId(): Uuid
@@ -124,5 +136,25 @@ class User implements UserInterface
     public function eraseCredentials()
     {
         return null;
+    }
+
+    public function getFirstname(): string
+    {
+        return $this->profile['firstname'];
+    }
+
+    public function setFirstname(string $firstname): void
+    {
+        $this->profile['firstname'] = $firstname;
+    }
+
+    public function setLastname(string $lastname): void
+    {
+        $this->profile['lastname'] = $lastname;
+    }
+
+    public function getLastname(): string
+    {
+        return $this->profile['lastname'];
     }
 }
