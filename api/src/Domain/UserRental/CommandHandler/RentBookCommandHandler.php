@@ -6,7 +6,7 @@ namespace App\Domain\UserRental\CommandHandler;
 
 use App\Domain\UserRental\Command\RentBookCommand;
 use App\Model\BookInventory;
-use App\Model\UserRental;
+use App\Model\BookRental;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class RentBookCommandHandler
@@ -36,7 +36,7 @@ final class RentBookCommandHandler
         }
 
 
-        $rentedBooks = $this->entityManager->getRepository(UserRental::class)->findBy(['userId' => $userId, 'returned' => null]);
+        $rentedBooks = $this->entityManager->getRepository(BookRental::class)->findBy(['userId' => $userId, 'returned' => null]);
         if (count($rentedBooks) >= 3) {
             throw new \Exception(sprintf('Renting more then 3 books is not allowed.'));
         }
@@ -44,7 +44,7 @@ final class RentBookCommandHandler
         $book->rentBook();
         $this->entityManager->persist($book);
 
-        $userRental = new UserRental($userId, $isbn);
+        $userRental = new BookRental($userId, $isbn);
         $this->entityManager->persist($userRental);
         $this->entityManager->flush();
     }

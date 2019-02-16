@@ -8,9 +8,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 
 /**
- * @ORM\Table(name="user_rentals")
+ * @ORM\Entity()
+ * @ORM\Table(name="book_rentals")
  */
-class UserRental
+class BookRental
 {
     /**
      * @var Uuid

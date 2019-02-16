@@ -8,7 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 
 /**
- * @ORM\Table(name="inventory")
+ * @ORM\Entity()
+ * @ORM\Table(name="book_inventory")
  */
 class BookInventory
 {

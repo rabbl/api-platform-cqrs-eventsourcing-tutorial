@@ -6,7 +6,7 @@ namespace App\Domain\UserRental\CommandHandler;
 
 use App\Domain\UserRental\Command\RentBookCommand;
 use App\Model\BookInventory;
-use App\Model\UserRental;
+use App\Model\BookRental;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class ReturnBookCommandHandler
@@ -36,10 +36,10 @@ final class ReturnBookCommandHandler
         }
 
         $userRental = $this->entityManager
-            ->getRepository(UserRental::class)
+            ->getRepository(BookRental::class)
             ->findOneBy(['userId' => $userId,'isbn' => $isbn, 'returned' => null]);
 
-        if (!$userRental instanceof UserRental) {
+        if (!$userRental instanceof BookRental) {
             throw new \Exception(sprintf('Rented Book by User %s with ISBN %s not found.', $userId, $isbn));
         }
 
