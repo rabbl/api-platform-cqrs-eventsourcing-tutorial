@@ -6,7 +6,15 @@ namespace App\Model;
 
 abstract class Command
 {
+    /**
+     * @var array
+     */
     protected $metadata = [];
+
+    /**
+     * @var array
+     */
+    protected $payload = [];
 
     abstract public static function fromPayload(array $payload);
 
