@@ -7,6 +7,11 @@ namespace App\Controller;
 use App\Domain\BookInventory\Command\AddBooksToInventoryCommand;
 use App\Domain\BookInventory\Command\RemoveBooksFromInventoryCommand;
 use App\Domain\BookInventory\Command\UpdateBookMetadataCommand;
+use App\Domain\BookRental\Command\RentBookCommand;
+use App\Domain\BookRental\Command\ReturnBookCommand;
+use App\Domain\User\Command\CreateUserCommand;
+use App\Domain\User\Command\DeleteUserCommand;
+use App\Domain\User\Command\UpdateUserCommand;
 use App\Model\User;
 use App\Model\Command;
 use Assert\Assertion;
@@ -29,7 +34,11 @@ final class MessageBoxController
         'addBooksToInventory' => AddBooksToInventoryCommand::class,
         'removeBooksFromInventory' => RemoveBooksFromInventoryCommand::class,
         'updateBookMetadata' => UpdateBookMetadataCommand::class,
-
+        'rentBook' => RentBookCommand::class,
+        'returnBook' => ReturnBookCommand::class,
+        'createUser' => CreateUserCommand::class,
+        'deleteUser' => DeleteUserCommand::class,
+        'updateUser' => UpdateUserCommand::class,
     ];
 
     public function __construct(MessageBusInterface $bus, TokenStorageInterface $tokenStorage)
@@ -39,7 +48,7 @@ final class MessageBoxController
     }
 
     /**
-     * @Route("/messagebox", name="messagebox", methods={"POST"})
+     * @Route("/api/messagebox", name="messagebox", methods={"POST"})
      * @param Request $request
      * @return JsonResponse
      */
@@ -80,7 +89,12 @@ final class MessageBoxController
         $command->withAddedMetadata('userId', $user->getId()->toString());
         $command->withAddedMetadata('is_admin', in_array('ROLE_ADMIN', $user->getRoles()));
 
-        $this->commandBus->dispatch($command);
+        try {
+            $this->commandBus->dispatch($command);
+        } catch (\Exception $e) {
+            return new JsonResponse(['message' => $e->getMessage()], 400);
+        }
+
         return new JsonResponse([], 202);
     }
 }
