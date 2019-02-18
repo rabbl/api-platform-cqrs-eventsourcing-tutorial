@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Model\User;
-
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 final class CreateUserCommand extends Command
@@ -21,13 +20,17 @@ final class CreateUserCommand extends Command
     /** @var EntityManagerInterface */
     private $entityManager;
 
+    /** @var MessageBusInterface */
+    private $messageBus;
+
     /** @var UserPasswordEncoderInterface */
     private $passwordEncoder;
 
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, MessageBusInterface $messageBus)
     {
-        $this->passwordEncoder = $passwordEncoder;
         $this->entityManager = $entityManager;
+        $this->messageBus = $messageBus;
+        $this->passwordEncoder = $passwordEncoder;
         parent::__construct();
     }
 
@@ -37,6 +40,8 @@ final class CreateUserCommand extends Command
             ->setDescription('Creates a new user.')
             ->addArgument('username', InputArgument::REQUIRED, 'Username')
             ->addArgument('password', InputArgument::REQUIRED, 'User password')
+            ->addArgument('firstname', InputArgument::REQUIRED, 'Firstname')
+            ->addArgument('lastname', InputArgument::REQUIRED, 'Lastname')
             ->addArgument('role', InputArgument::OPTIONAL, 'Users role')
             ->setHelp('This command allows you to create a user...');
     }
@@ -52,27 +57,21 @@ final class CreateUserCommand extends Command
 
         $username = $input->getArgument('username');
         $password = $input->getArgument('password');
+        $firstname = $input->getArgument('firstname');
+        $lastname = $input->getArgument('lastname');
         $role = $input->getArgument('role') ?? 'ROLE_USER';
 
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $username]);
-        if ($user instanceof User) {
-            $output->writeln('Username already taken!');
-            return;
-        }
+
+        $command = \App\Domain\User\Command\CreateUserCommand::fromCLICommand(
+            $username, $password, $firstname, $lastname, $role
+        );
 
         try {
-            /** @var User $user */
-            $user = new User($username, $password, [$role]);
-        } catch (\InvalidArgumentException $e) {
+            $this->messageBus->dispatch($command);
+        } catch (\Exception $e) {
             $output->writeln($e->getMessage());
             return;
         }
-
-        $encryptedPassword = $this->passwordEncoder->encodePassword($user, $password);
-        $user->setPassword($encryptedPassword);
-
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
 
         $output->writeln('User successfully generated!');
     }

@@ -55,11 +55,11 @@ class BookInventory
      * @param string $description
      * @param int $numberOfPurchasedBooks
      */
-    public function __construct(string $isbn, string $name, string $description, int $numberOfPurchasedBooks)
+    public function __construct(string $isbn, ?string $name, ?string $description, int $numberOfPurchasedBooks)
     {
         $this->isbn = $isbn;
-        $this->name = $name;
-        $this->description = $description;
+        $this->name = $name ?? '';
+        $this->description = $description ?? '';
         $this->totalNumberInInventory = $numberOfPurchasedBooks;
         $this->totalNumberRented = 0;
     }
