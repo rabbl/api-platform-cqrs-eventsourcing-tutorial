@@ -2,6 +2,7 @@
 
 namespace App\Tests\Controller;
 
+use App\Model\BookInventory;
 use App\Model\User;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -131,5 +132,23 @@ class CommandTestBaseClass extends WebTestCase
         $em->flush();
 
         return $user;
+    }
+
+    protected function addRandomBookToInventory(): BookInventory
+    {
+        $isbn = sprintf('isbn_%d', rand(1000000, 10000000 - 1));
+        $name = sprintf('a_random_book_name_%d', rand(1000000, 10000000 - 1));
+        $description = sprintf('a_random_book_description_%d', rand(1000000, 10000000 - 1));
+        $numberOfBooks = 5;
+
+        static::createClient();
+
+        /** @var EntityManagerInterface $em */
+        $em = self::$container->get('doctrine')->getManager();
+        $book = new BookInventory($isbn, $name, $description, $numberOfBooks);
+        $em->persist($book);
+        $em->flush();
+
+        return $book;
     }
 }

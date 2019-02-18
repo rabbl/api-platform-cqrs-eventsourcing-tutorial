@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\BookRental\CommandHandler;
 
-use App\Domain\BookRental\Command\RentBookCommand;
+use App\Domain\BookRental\Command\ReturnBookCommand;
 use App\Model\BookInventory;
 use App\Model\BookRental;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,10 +20,10 @@ final class ReturnBookCommandHandler
     }
 
     /**
-     * @param RentBookCommand $command
+     * @param ReturnBookCommand $command
      * @throws \Exception
      */
-    public function __invoke(RentBookCommand $command)
+    public function __invoke(ReturnBookCommand $command)
     {
 
         $isbn = $command->isbn();
@@ -46,7 +46,7 @@ final class ReturnBookCommandHandler
         $book->returnBook();
         $this->entityManager->persist($book);
 
-        $bookRental->bookHasBeenReturned();
+        $bookRental->returnBook();
         $this->entityManager->persist($bookRental);
         $this->entityManager->flush();
     }

@@ -11,7 +11,6 @@ final class ReturnBookCommand extends Command
 {
 
     private $isbn;
-    private $userId;
 
     /**
      * @param array $payload
@@ -24,7 +23,6 @@ final class ReturnBookCommand extends Command
 
         $self = new self();
         $self->isbn = $payload['isbn'];
-        $self->userId = $payload['userId'];
         return $self;
     }
 
@@ -32,9 +30,6 @@ final class ReturnBookCommand extends Command
     {
         $isbn = $payload['isbn'];
         Assertion::string($isbn);
-
-        $userId = $payload['userId'];
-        Assertion::string($userId);
     }
 
     private function __construct()
@@ -48,6 +43,6 @@ final class ReturnBookCommand extends Command
 
     public function userId(): string
     {
-        return $this->userId;
+        return $this->metadata['userId'];
     }
 }

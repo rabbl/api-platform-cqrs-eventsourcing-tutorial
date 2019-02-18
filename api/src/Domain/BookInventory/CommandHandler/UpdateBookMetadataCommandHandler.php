@@ -36,7 +36,7 @@ final class UpdateBookMetadataCommandHandler
         /** @var BookInventory $book */
         $book = $this->entityManager->getRepository(BookInventory::class)->findOneBy(['isbn' => $isbn]);
 
-        if ($book instanceof BookInventory) {
+        if (!$book instanceof BookInventory) {
             throw new \Exception(sprintf('Book with ISBN %s not found in inventory.', $isbn));
         }
 
