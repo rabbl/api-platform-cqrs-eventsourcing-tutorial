@@ -2,26 +2,33 @@
 
 namespace App\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class UserAuthenticationTest extends WebTestCase
+use App\Model\User;
+
+class UserAuthenticationTest extends CommandTestBaseClass
 {
 
+    /**
+     * @return array
+     * @throws \Exception
+     */
     public function provider()
     {
+        $admin = $this->createRandomAdmin();
+        $user = $this->createRandomUser();
+
         return [
-            ['admin', 'admin_pw', 200],
-            ['user', 'user_pw', 403]
+            [$admin, 200],
+            [$user, 403]
         ];
     }
 
     /**
      * @dataProvider provider
-     * @param $username
-     * @param $password
+     * @param User $user
      * @param $statusCode
      */
-    public function testAuthentication($username, $password, $statusCode)
+    public function testAuthentication($user, $statusCode)
     {
         $client = static::createClient();
 
@@ -31,7 +38,7 @@ class UserAuthenticationTest extends WebTestCase
             [],
             [],
             ['CONTENT_TYPE' => 'application/json'],
-            json_encode(["username" => $username, "password" => $password])
+            json_encode(["username" => $user->getUsername(), "password" => $user->getPassword()])
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -43,7 +50,7 @@ class UserAuthenticationTest extends WebTestCase
             '/api/users',
             [],
             [],
-            ['HTTP_Authorization' => sprintf('Bearer %s',  $token)]
+            ['HTTP_Authorization' => sprintf('Bearer %s', $token)]
         );
 
         $this->assertEquals($statusCode, $client->getResponse()->getStatusCode());

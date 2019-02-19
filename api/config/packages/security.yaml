@@ -1,21 +1,21 @@
 security:
     encoders:
-        App\Entity\User:
+        App\Model\User:
             algorithm: bcrypt
             cost: 12
-            
+
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         db_provider:
             entity:
-                class: App\Entity\User
+                class: App\Model\User
                 property: username
-        
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-            
+
         login:
             pattern:  ^/api/login
             stateless: true
@@ -25,13 +25,23 @@ security:
                 success_handler:          lexik_jwt_authentication.handler.authentication_success
                 failure_handler:          lexik_jwt_authentication.handler.authentication_failure
 
+        register:
+            pattern:  ^/api/register
+            stateless: true
+            anonymous: true
+
+        docs:
+            pattern:  ^/api/docs
+            stateless: true
+            anonymous: true
+
         api:
             pattern:   ^/api
             stateless: true
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
-            
+
         main:
             anonymous: true
 
@@ -46,5 +56,13 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        # - { path: ^/admin, roles: ROLE_ADMIN }
+        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/api/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
+
+    role_hierarchy:
+        ROLE_ADMIN:       [ROLE_USER, ROLE_NM_MF]
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN]

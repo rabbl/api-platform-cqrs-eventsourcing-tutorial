@@ -12,9 +12,9 @@ class BookInventoryTest extends WebTestCase
     public function provider()
     {
         return [[
-            '978-0345453747',
+            '978-'.rand(100000, 1000000),
             'The Ultimate Hitchhiker\'s Guide to the Galaxy: Five Novels in One Outrageous Volume',
-            'At last in paperback in one complete volume, here are the five classic novels from Douglas Adams\'s beloved Hitchiker series.'
+            'At last in paperback in one complete volume, here are the five classic novels from Douglas Adams\'s beloved Hitchhiker series.'
         ]];
     }
 
@@ -60,5 +60,7 @@ class BookInventoryTest extends WebTestCase
         $this->assertEquals(3, $book->getTotalNumberInInventory());
         $this->assertEquals(3, $book->getTotalNumberInLibrary());
         $this->assertEquals(0, $book->getTotalNumberRented());
+
+
     }
 }

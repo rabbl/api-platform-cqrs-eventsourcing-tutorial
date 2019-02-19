@@ -17,7 +17,7 @@ class BookRentalTest extends WebTestCase
         $client = static::createClient();
         $userId = Uuid::uuid4()->toString();
         $isbn = '978-0345453747';
-        $bookRental = new BookRental($userId, $isbn);
+        $bookRental = new BookRental($isbn, $userId);
 
         /** @var EntityManagerInterface $em */
         $em = $client->getContainer()->get('doctrine')->getManager();
