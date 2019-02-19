@@ -62,9 +62,10 @@ final class CreateUserCommand extends Command
         $role = $input->getArgument('role') ?? 'ROLE_USER';
 
 
-        $command = \App\Domain\User\Command\CreateUserCommand::fromCLICommand(
-            $username, $password, $firstname, $lastname, $role
+        $command = \App\Domain\User\Command\CreateUserCommand::fromParams(
+            $username, $password, $firstname, $lastname, [$role]
         );
+        $command->withAddedMetadata('is_admin', true);
 
         try {
             $this->messageBus->dispatch($command);

@@ -20,18 +20,17 @@ final class CreateUserCommand extends Command
      * @param string $password
      * @param string $firstname
      * @param string $lastname
-     * @param $role
+     * @param array $roles
      * @return CreateUserCommand
      */
-    public static function fromCLICommand(string $username, string $password, string $firstname, string $lastname, $role): self
+    public static function fromParams(string $username, string $password, string $firstname, string $lastname, array $roles): self
     {
         $self = new self();
         $self->username = $username;
         $self->password = $password;
         $self->firstname = $firstname;
         $self->lastname = $lastname;
-        $self->roles = [$role];
-        $self->metadata['is_admin'] = true;
+        $self->roles = $roles;
         return $self;
     }
 
