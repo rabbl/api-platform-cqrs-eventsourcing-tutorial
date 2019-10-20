@@ -1,3 +1,12 @@
+# CQRS AND EVENTSOURCING WITH API PLATFORM TURORIAL
+
+Part 1: https://junghanns.it/posts/cqrs-and-eventsourcing-with-api-platform-i/
+Part 2: https://junghanns.it/posts/cqrs-and-eventsourcing-with-api-platform-ii/
+Part 3: https://junghanns.it/posts/cqrs-and-eventsourcing-with-api-platform-iii/
+Part 4: https://junghanns.it/posts/cqrs-and-eventsourcing-with-api-platform-iv/
+
+## API Platform
+
 <h1 align="center"><a href="https://api-platform.com"><img src="https://api-platform.com/logo-250x250.png" alt="API Platform"></a></h1>
 
 API Platform is a next-generation web framework designed to easily create API-first projects without compromising extensibility
