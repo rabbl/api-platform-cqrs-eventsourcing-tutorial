@@ -1,9 +1,9 @@
 # CQRS AND EVENTSOURCING WITH API PLATFORM TURORIAL
 
-Part 1: https://junghanns.it/posts/cqrs-and-eventsourcing-with-api-platform-i/
-Part 2: https://junghanns.it/posts/cqrs-and-eventsourcing-with-api-platform-ii/
-Part 3: https://junghanns.it/posts/cqrs-and-eventsourcing-with-api-platform-iii/
-Part 4: https://junghanns.it/posts/cqrs-and-eventsourcing-with-api-platform-iv/
+ - Part 1: https://junghanns.it/posts/cqrs-and-eventsourcing-with-api-platform-i/
+ - Part 2: https://junghanns.it/posts/cqrs-and-eventsourcing-with-api-platform-ii/
+ - Part 3: https://junghanns.it/posts/cqrs-and-eventsourcing-with-api-platform-iii/
+ - Part 4: https://junghanns.it/posts/cqrs-and-eventsourcing-with-api-platform-iv/
 
 ## API Platform
 
